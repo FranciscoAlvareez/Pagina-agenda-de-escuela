@@ -3,15 +3,13 @@ import "./App.css";
 import Login from "./Views/Login";
 import React from "react";
 import Home from "./Views/Home";
+import Card from "./Components/Card";
 function App() {
   return (
     <div>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/home" element={<Home/>}></Route>
-          <Route path="/" element={<Login />}></Route>
-        </Routes>
-      </BrowserRouter>
+      <Card title={"h"} description={"hola como estas"} />
+      <Card title={"h"} description={"hola como estas"} />
+      <Card title={"h"} description={"hola como estas"} />
     </div>
   );
 }
