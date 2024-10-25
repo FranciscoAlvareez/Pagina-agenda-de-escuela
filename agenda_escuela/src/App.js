@@ -7,9 +7,12 @@ import Card from "./Components/Card";
 function App() {
   return (
     <div>
-      <Card title={"h"} description={"hola como estas"} />
-      <Card title={"h"} description={"hola como estas"} />
-      <Card title={"h"} description={"hola como estas"} />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/home" element={<Home/>}></Route>
+          <Route path="/" element={<Login />}></Route>
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }
