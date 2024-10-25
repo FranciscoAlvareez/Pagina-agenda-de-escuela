@@ -1,7 +1,7 @@
 import { useState } from "react";
-import "./Login.css";
+import "./Register.css";
 import { useNavigate } from "react-router-dom";
-function Login() {
+function Register() {
   // Estados para almacenar el nombre de usuario y contraseña
   const [name, setUsername] = useState("");
   const [lastname, setLastname] = useState("");
@@ -51,4 +51,4 @@ function Login() {
   };
 
 
-export default Login;
+export default Register;
