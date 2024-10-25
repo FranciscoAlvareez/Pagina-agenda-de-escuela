@@ -1,3 +1,4 @@
+@import url(/src/global.css);
 .Login{
   display: flex;
   flex-direction: column;
@@ -5,7 +6,7 @@
   padding: 20px;
   width: 400px; /* Adjust the width as needed */
   margin: 0 auto; /* Center horizontally */
-  background-color: #5086f3;
+  background-color: var(--primary-gray);
   border: 1px solid #0b0b0b;
   border-radius: 5px;
   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.2);

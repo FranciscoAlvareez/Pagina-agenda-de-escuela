@@ -1,0 +1,10 @@
+:root{
+    --primary-gray : #607D8B;
+    --primary-white:#F5F5F5;
+    --background: #B2DFDB;
+    --background-registerLogin : #D9D9D9;
+    --neutral-black: #151515;
+    --neutral-white: #ffffff;
+    --font-family: "";
+}
+@import url('https://fonts.googleapis.com/css2?family=Exo:ital,wght@0,100..900;1,100..900&family=Rubik+Wet+Paint&display=swap');
