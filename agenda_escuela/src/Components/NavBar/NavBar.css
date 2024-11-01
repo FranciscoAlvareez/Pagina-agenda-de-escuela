@@ -1,0 +1,67 @@
+/* NavBar.css */
+.navBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #333;
+  padding: 10px 20px;
+  color: white;
+}
+
+.navBar-logo a {
+  color: white;
+  font-size: 24px;
+  text-decoration: none;
+}
+
+.navBar-links {
+  display: flex;
+  gap: 15px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navBar-links li a {
+  color: white;
+  text-decoration: none;
+  font-size: 18px;
+  transition: color 0.3s ease;
+}
+
+.navBar-links li a:hover {
+  color: #ff6600;
+}
+
+/* Botón de menú para móviles */
+.navBar-toggle {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+}
+
+/* Efecto de abrir/cerrar el menú en pantallas pequeñas */
+.navBar-links.open {
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .navBar-links {
+    display: none;
+    flex-direction: column;
+    gap: 10px;
+    position: absolute;
+    top: 60px;
+    right: 20px;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+  .navBar-toggle {
+    display: block;
+  }
+}
