@@ -8,12 +8,16 @@ function App() {
     <div>
       <BrowserRouter>
         <Routes>
+          <Route path="/" element={<Forms title={"Login"} />}></Route>
           <Route path="/home" element={<Home />}></Route>
-          <Route path="/register" element={<Forms title={"Register"}/>}></Route>
-          <Route path="/" element={<Forms title={"Login"}/>}></Route>
+          <Route path="/login" element={<Forms title={"Login"} />}></Route>
+          <Route
+            path="/register"
+            element={<Forms title={"Register"} />}
+          ></Route>
         </Routes>
       </BrowserRouter>
-    </div>  
+    </div>
   );
 }
 export default App;
