@@ -4,6 +4,8 @@ import Forms from "./Components/Forms/index.jsx";
 import React from "react";
 import Home from "./Views/Home";
 import NavBar from "./Components/NavBar/NavBar.jsx";
+import Instrucciones from "./Views/AboutUs.jsx"; // Importa el componente Instrucciones
+import Inscripciones from "./Views/Inscripciones.jsx";
 import { useLocation } from "react-router-dom";
 
 function App() {
@@ -14,22 +16,20 @@ function App() {
   );
 }
 
-// Componente que maneja las rutas y el NavBar
 const AppRoutes = () => {
-  const location = useLocation(); // Ahora se usa aquí, dentro de un contexto de Router
-
-  // Define las rutas en las que NO quieres mostrar el NavBar
+  const location = useLocation();
   const noNavBarRoutes = ["/login", "/register"];
 
   return (
     <div>
-      {/* Renderiza NavBar solo si la ruta actual no está en noNavBarRoutes */}
       {!noNavBarRoutes.includes(location.pathname) && <NavBar />}
       <Routes>
         <Route path="/" element={<Forms title={"Login"} />} />
         <Route path="/home" element={<Home />} />
         <Route path="/login" element={<Forms title={"Login"} />} />
         <Route path="/register" element={<Forms title={"Register"} />} />
+        <Route path="/instrucciones" element={<Instrucciones />} />
+        <Route path="/inscripciones" element={<Inscripciones />} />
       </Routes>
     </div>
   );

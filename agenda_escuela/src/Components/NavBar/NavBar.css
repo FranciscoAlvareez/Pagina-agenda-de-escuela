@@ -1,67 +1,76 @@
 /* NavBar.css */
+
 .navBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background-color: #333;
+  background-color: #f8f9fa;
   padding: 10px 20px;
-  color: white;
+  border-bottom: 1px solid #d1d1d1;
+  font-family: Arial, sans-serif;
+}
+
+.navBar-logo {
+  font-size: 16px;
+  color: #718096;
+  font-weight: bold;
 }
 
 .navBar-logo a {
-  color: white;
-  font-size: 24px;
+  color: #718096;
   text-decoration: none;
 }
 
 .navBar-links {
   display: flex;
-  gap: 15px;
   list-style: none;
+  gap: 30px; /* Espacio entre los elementos */
   margin: 0;
   padding: 0;
 }
 
-.navBar-links li a {
-  color: white;
+.navBar-links li {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.navBar-links a {
   text-decoration: none;
-  font-size: 18px;
-  transition: color 0.3s ease;
+  color: #718096;
+  transition: color 0.3s;
 }
 
-.navBar-links li a:hover {
-  color: #ff6600;
+.navBar-links a:hover {
+  color: #2d3748;
 }
 
-/* Botón de menú para móviles */
 .navBar-toggle {
   display: none;
-  font-size: 24px;
-  background: none;
-  border: none;
-  color: white;
-  cursor: pointer;
-}
-
-/* Efecto de abrir/cerrar el menú en pantallas pequeñas */
-.navBar-links.open {
-  display: block;
 }
 
 @media (max-width: 768px) {
   .navBar-links {
     display: none;
-    flex-direction: column;
-    gap: 10px;
-    position: absolute;
-    top: 60px;
-    right: 20px;
-    background-color: #333;
-    padding: 10px;
-    border-radius: 5px;
   }
 
   .navBar-toggle {
     display: block;
+    font-size: 24px;
+    background: none;
+    border: none;
+    color: #718096;
+    cursor: pointer;
+  }
+
+  .navBar-links.open {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 50px;
+    right: 20px;
+    background-color: #f8f9fa;
+    padding: 10px;
+    border: 1px solid #d1d1d1;
+    gap: 10px;
   }
 }
