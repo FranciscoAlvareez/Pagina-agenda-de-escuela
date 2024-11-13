@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "./Inscripciones.css";
 
 const activities = [
   { name: "Snowboard", cost: 100, ageRestriction: 12 },
@@ -36,44 +37,46 @@ const Inscripciones = () => {
   };
 
   return (
-    <div>
-      <h1>Inscripciones</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>Actividad:</label>
-          <select value={selectedActivity} onChange={handleActivityChange}>
-            <option value="">Seleccione una actividad</option>
-            {activities.map((activity) => (
-              <option key={activity.name} value={activity.name}>
-                {activity.name} - ${activity.cost} - Edad mínima:{" "}
-                {activity.ageRestriction}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label>Turno:</label>
-          <select value={selectedShift} onChange={handleShiftChange}>
-            <option value="">Seleccione un turno</option>
-            {shifts.map((shift) => (
-              <option key={shift} value={shift}>
-                {shift}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={isGroupClass}
-              onChange={handleClassTypeChange}
-            />
-            Clase grupal
-          </label>
-        </div>
-        <button type="submit">Inscribirse</button>
-      </form>
+    <div className="inscripciones-container">
+      <div className="container">
+        <h1>Inscripciones</h1>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>Actividad:</label>
+            <select value={selectedActivity} onChange={handleActivityChange}>
+              <option value="">Seleccione una actividad</option>
+              {activities.map((activity) => (
+                <option key={activity.name} value={activity.name}>
+                  {activity.name} - ${activity.cost} - Edad mínima:{" "}
+                  {activity.ageRestriction}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label>Turno:</label>
+            <select value={selectedShift} onChange={handleShiftChange}>
+              <option value="">Seleccione un turno</option>
+              {shifts.map((shift) => (
+                <option key={shift} value={shift}>
+                  {shift}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                checked={isGroupClass}
+                onChange={handleClassTypeChange}
+              />
+              Clase grupal
+            </label>
+          </div>
+          <button type="submit">Inscribirse</button>
+        </form>
+      </div>
     </div>
   );
 };

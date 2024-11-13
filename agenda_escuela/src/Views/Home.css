@@ -1,4 +1,35 @@
-@import url(/src/global.css);
-.Barra{
-    
+/* Home.css */
+.home-container {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f4f8;
+  text-align: center;
+  padding: 20px;
+}
+
+h1 {
+  color: #333;
+}
+
+h2 {
+  color: #6c5ce7;
+}
+
+ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+ul li {
+  font-size: 1.2em;
+  margin-bottom: 15px;
+}
+
+a {
+  color: #6c5ce7;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
 }
