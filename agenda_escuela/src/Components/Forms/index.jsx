@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import classes from "./index.module.css"
+import classes from "./index.module.css";
 import logoProyecto from "../../assets/Icons/logoProyecto.png";
 function Forms({ title }) {
   // Estados para almacenar los valores de los inputs
@@ -13,12 +13,20 @@ function Forms({ title }) {
   const [dateBirth, setDateBirth] = useState("");
 
   const navigate = useNavigate();
-  
+
   // Función para manejar el envío del formulario
   const handleSubmit = (event) => {
     event.preventDefault();
     // Lógica para enviar los datos
-    console.log("Formulario enviado:", { name, lastname, ci, contactnumber, password, mail, dateBirth });
+    console.log("Formulario enviado:", {
+      name,
+      lastname,
+      ci,
+      contactnumber,
+      password,
+      mail,
+      dateBirth,
+    });
     navigate("/home");
   };
   return (
@@ -61,6 +69,13 @@ function Forms({ title }) {
                 onChange={(e) => setLastname(e.target.value)}
               />
               <input
+                type="text"
+                placeholder="Cedula de Identidad"
+                className={classes.input}
+                value={password}
+                onChange={(e) => setCi(e.target.value)}
+              />
+              <input
                 type="number"
                 placeholder="Numero de contacto"
                 className={classes.input}
@@ -76,7 +91,9 @@ function Forms({ title }) {
               />
             </>
           )}
-          <button type="submit">{title}</button>
+          <button className="registerButton" type="submit">
+            {title}
+          </button>
         </form>
         <div className="link-container">
           {title === "Login" ? (

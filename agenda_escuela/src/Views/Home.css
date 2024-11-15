@@ -1,6 +1,11 @@
-/* Home.css */
+.allpage {
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f0f4f8;
+}
 .home-container {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   background-color: #f0f4f8;
   text-align: center;
   padding: 20px;
