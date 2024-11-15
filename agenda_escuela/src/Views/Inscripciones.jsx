@@ -27,6 +27,7 @@ const Inscripciones = () => {
   };
 
   const handleSubmit = (e) => {
+    alert("Inscripcion realizada correctamente!");
     e.preventDefault();
     // Handle form submission logic here
     console.log({
@@ -56,7 +57,7 @@ const Inscripciones = () => {
           <div>
             <label>Turno:</label>
             <select value={selectedShift} onChange={handleShiftChange}>
-              <option value="">Seleccione un turno</option>
+              <option onClick={handleSubmit}value="">Seleccione un turno</option>
               {shifts.map((shift) => (
                 <option key={shift} value={shift}>
                   {shift}
