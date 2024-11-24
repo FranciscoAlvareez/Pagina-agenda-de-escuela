@@ -8,9 +8,11 @@ const Inscripciones = () => {
   const [activities, setActivities] = useState([]);
   const [shifts, setShifts] = useState([]);
   const [equipments, setEquipments] = useState([]);
+  const [classDates, setClassDates] = useState([]);
   const [selectedActivity, setSelectedActivity] = useState("");
   const [selectedShift, setSelectedShift] = useState("");
   const [selectedEquipment, setSelectedEquipment] = useState("");
+  const [selectedDate, setSelectedDate] = useState("");
   const [isGroupClass, setIsGroupClass] = useState(false);
   const [ciAlumno, setCiAlumno] = useState(null);
 
@@ -35,6 +37,9 @@ const Inscripciones = () => {
 
         const equipmentsResponse = await axios.get("http://localhost:5000/equipamiento");
         setEquipments(equipmentsResponse.data);
+
+        const classDatesResponse = await axios.get("http://localhost:5000/clase");
+        setClassDates(classDatesResponse.data);
       } catch (error) {
         console.error("Error al cargar datos:", error);
       }
@@ -46,14 +51,21 @@ const Inscripciones = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
+    if (!selectedActivity || !selectedShift || !selectedDate) {
+      alert("Por favor, selecciona una actividad, un turno y una fecha.");
+      return;
+    }
+
+    const formattedDate = new Date(selectedDate).toISOString().split("T")[0];
+
     const data = {
       id_clase: selectedActivity,
       ci_alumno: ciAlumno,
       id_turno: selectedShift,
-      fecha_clase: new Date().toISOString().split("T")[0],
+      fecha_clase: formattedDate,
       es_grupal: isGroupClass,
       id_equipamiento: selectedEquipment || null, // Verifica si tiene un valor
-      es_alquiler: 0, 
+      es_alquiler: 1, 
     };
 
     console.log("Datos enviados al backend:", data);
@@ -99,6 +111,25 @@ const Inscripciones = () => {
                 {shift.turno} - {shift.hora_inicio} a {shift.hora_fin}
               </option>
             ))}
+          </select>
+        </div>
+
+        
+        <div>
+          <label>Fecha de la Clase:</label>
+          <select value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}>
+            <option value="">Seleccione una fecha</option>
+            {classDates
+              .filter(
+                (clase) =>
+                  clase.id === parseInt(selectedActivity) &&
+                  clase.id_turno === parseInt(selectedShift)
+              )
+              .map((clase) => (
+                <option key={clase.id} value={clase.fecha_clase}>
+                  {clase.fecha_clase}
+                </option>
+              ))}
           </select>
         </div>
 
