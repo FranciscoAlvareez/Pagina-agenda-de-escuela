@@ -303,7 +303,6 @@ def inscribir_alumno():
         id_equipamiento = data.get('id_equipamiento')
         es_alquiler = data.get('es_alquiler', 0)  # Valor por defecto: 0
 
-
         # Conexión a la base de datos
         conexion = mysql.connector.connect(**db_config)
         cursor = conexion.cursor(dictionary=True)  # Asegúrate de crear el cursor
@@ -397,6 +396,37 @@ def agregar_clase():
     except Exception as e:
         return jsonify({"error": "Ocurrió un error inesperado: " + str(e)}), 500
 
+@app.route('/clase/<int:id>', methods=['DELETE'])
+def eliminar_clase(id):
+    try:
+        # Conexión a la base de datos
+        conexion = mysql.connector.connect(**db_config)
+        cursor = conexion.cursor()
+
+        # Verificar si la clase existe
+        verificar_query = "SELECT * FROM clase WHERE id = %s"
+        cursor.execute(verificar_query, (id,))
+        clase = cursor.fetchone()
+
+        if not clase:
+            return jsonify({"error": "La clase no existe"}), 404
+
+        # Eliminar la clase
+        eliminar_query = "DELETE FROM clase WHERE id = %s"
+        cursor.execute(eliminar_query, (id,))
+        conexion.commit()
+
+        # Cerrar la conexión
+        cursor.close()
+        conexion.close()
+
+        return jsonify({"message": "Clase eliminada exitosamente"}), 200
+
+    except mysql.connector.Error as e:
+        return jsonify({"error": str(e)}), 500
+
+    except Exception as e:
+        return jsonify({"error": "Ocurrió un error inesperado: " + str(e)}), 500
 
 
 

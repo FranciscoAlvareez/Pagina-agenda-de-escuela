@@ -13,7 +13,7 @@ const Inscripciones = () => {
   const [selectedEquipment, setSelectedEquipment] = useState("");
   const [selectedDate, setSelectedDate] = useState("");
   const [isGroupClass, setIsGroupClass] = useState(false);
-
+  const [ciAlumno, setCiAlumno] = useState(null);
 
   // Obtener el CI del token al cargar el componente
   useEffect(() => {
@@ -41,7 +41,9 @@ const Inscripciones = () => {
         );
         setEquipments(equipmentsResponse.data);
 
-        const classDatesResponse = await axios.get("http://localhost:5000/clase");
+        const classDatesResponse = await axios.get(
+          "http://localhost:5000/clase"
+        );
         setClassDates(classDatesResponse.data);
       } catch (error) {
         console.error("Error al cargar datos:", error);
@@ -65,11 +67,10 @@ const Inscripciones = () => {
       id_clase: selectedActivity,
       ci_alumno: ciAlumno,
       id_turno: selectedShift,
-
       fecha_clase: formattedDate,
       es_grupal: isGroupClass,
       id_equipamiento: selectedEquipment || null, // Verifica si tiene un valor
-      es_alquiler: 1, 
+      es_alquiler: 1,
     };
 
     console.log("Datos enviados al backend:", data);
@@ -125,10 +126,12 @@ const Inscripciones = () => {
           </select>
         </div>
 
-        
         <div>
           <label>Fecha de la Clase:</label>
-          <select value={selectedDate} onChange={(e) => setSelectedDate(e.target.value)}>
+          <select
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          >
             <option value="">Seleccione una fecha</option>
             {classDates
               .filter(
@@ -157,6 +160,17 @@ const Inscripciones = () => {
               </option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label>
+            <input
+              type="checkbox"
+              checked={isGroupClass}
+              onChange={(e) => setIsGroupClass(e.target.checked)}
+            />
+            Clase grupal
+          </label>
         </div>
 
         <button type="submit">Inscribirse</button>

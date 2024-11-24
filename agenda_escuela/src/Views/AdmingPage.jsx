@@ -67,7 +67,6 @@ const AdminPage = () => {
       if (response.ok) {
         setSuccess("Clase eliminada exitosamente.");
         setError("");
-        // Actualizar lista local de clases después de eliminar
         setClasses((prevClasses) =>
           prevClasses.filter((classItem) => classItem.id !== id)
         );
