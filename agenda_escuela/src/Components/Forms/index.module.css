@@ -44,13 +44,8 @@ button:hover {
   background-color: #dce8f7;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
-<<<<<<< HEAD
 h2{
   font-family: 'Montserrat', sans-serif; 
-=======
-h2 {
-  font-family: "Montserrat", sans-serif; /* Cambia 'Montserrat' por la fuente que prefieras */
->>>>>>> e2def3dfcf491845d4700b191c01835b31cb250b
   font-size: 3rem;
   font-weight: 70;
   line-height: 1.2;
