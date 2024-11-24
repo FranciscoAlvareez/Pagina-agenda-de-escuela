@@ -52,7 +52,7 @@ CREATE TABLE clase (
     ci_instructor INT NOT NULL,
     id_actividad INT NOT NULL,
     id_turno INT NOT NULL,
-    dictada BOOLEAN NOT NULL ,
+    dictada BOOLEAN ,
     cupos INT NOT NULL,
     grupal BOOLEAN NOT NULL,
     fecha_clase DATE NOT NULL,
@@ -131,3 +131,4 @@ CREATE TABLE alquiler_equipamiento (
   FOREIGN KEY (ci_alumno) REFERENCES alumnos(ci),
   FOREIGN KEY (id_equipamiento) REFERENCES equipamiento(id)
 );
+
