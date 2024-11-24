@@ -3,7 +3,6 @@ import axios from "axios";
 import { jwtDecode } from "jwt-decode"; // Para decodificar el token JWT
 import "./Inscripciones.css";
 
-
 const Inscripciones = () => {
   const [activities, setActivities] = useState([]);
   const [shifts, setShifts] = useState([]);
@@ -11,7 +10,6 @@ const Inscripciones = () => {
   const [selectedActivity, setSelectedActivity] = useState("");
   const [selectedShift, setSelectedShift] = useState("");
   const [selectedEquipment, setSelectedEquipment] = useState("");
-  const [isGroupClass, setIsGroupClass] = useState(false);
   const [ciAlumno, setCiAlumno] = useState(null);
 
   // Obtener el CI del token al cargar el componente
@@ -27,13 +25,17 @@ const Inscripciones = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const activitiesResponse = await axios.get("http://localhost:5000/actividades");
+        const activitiesResponse = await axios.get(
+          "http://localhost:5000/actividades"
+        );
         setActivities(activitiesResponse.data);
 
         const shiftsResponse = await axios.get("http://localhost:5000/turnos");
         setShifts(shiftsResponse.data);
 
-        const equipmentsResponse = await axios.get("http://localhost:5000/equipamiento");
+        const equipmentsResponse = await axios.get(
+          "http://localhost:5000/equipamiento"
+        );
         setEquipments(equipmentsResponse.data);
       } catch (error) {
         console.error("Error al cargar datos:", error);
@@ -51,19 +53,22 @@ const Inscripciones = () => {
       ci_alumno: ciAlumno,
       id_turno: selectedShift,
       fecha_clase: new Date().toISOString().split("T")[0],
-      es_grupal: isGroupClass,
       id_equipamiento: selectedEquipment || null, // Verifica si tiene un valor
-      es_alquiler: 0, 
+      es_alquiler: 0,
     };
 
     console.log("Datos enviados al backend:", data);
 
     try {
-      const response = await axios.post("http://localhost:5000/inscribir", data, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios.post(
+        "http://localhost:5000/inscribir",
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
       alert(response.data.message || "Inscripción realizada con éxito");
     } catch (error) {
       console.error("Error al inscribir:", error);
@@ -92,7 +97,10 @@ const Inscripciones = () => {
 
         <div>
           <label>Turno:</label>
-          <select value={selectedShift} onChange={(e) => setSelectedShift(e.target.value)}>
+          <select
+            value={selectedShift}
+            onChange={(e) => setSelectedShift(e.target.value)}
+          >
             <option value="">Seleccione un turno</option>
             {shifts.map((shift) => (
               <option key={shift.id} value={shift.id}>
@@ -115,17 +123,6 @@ const Inscripciones = () => {
               </option>
             ))}
           </select>
-        </div>
-
-        <div>
-          <label>
-            <input
-              type="checkbox"
-              checked={isGroupClass}
-              onChange={(e) => setIsGroupClass(e.target.checked)}
-            />
-            Clase grupal
-          </label>
         </div>
 
         <button type="submit">Inscribirse</button>

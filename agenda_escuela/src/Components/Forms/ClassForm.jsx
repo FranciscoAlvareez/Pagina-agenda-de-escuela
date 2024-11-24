@@ -1,46 +1,60 @@
 import React, { useState } from "react";
 
-const ClassForm = ({ instructors, students, onSubmit }) => {
+const ClassForm = ({ instructors, onSubmit }) => {
   const [className, setClassName] = useState("");
   const [selectedInstructor, setSelectedInstructor] = useState("");
   const [selectedTurn, setSelectedTurn] = useState("");
-  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [date, setDate] = useState("");
+  const [capacity, setCapacity] = useState("");
+  const [isGroupClass, setIsGroupClass] = useState(false);
+  const [activity, setActivity] = useState("");
+  const [level, setLevel] = useState("");
   const [error, setError] = useState("");
 
   const turns = ["Mañana", "Tarde", "Noche"];
+  const activities = ["Snowboard", "Esquí", "Patinaje"];
+  const levels = ["Principiante", "Intermedio", "Avanzado"];
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const instructorConflict = instructors.some(
-      (instructor) =>
-        instructor.name === selectedInstructor &&
-        instructor.turn === selectedTurn
-    );
-    const studentConflict = selectedStudents.some((student) =>
-      students.some((s) => s.name === student && s.turn === selectedTurn)
-    );
 
-    if (instructorConflict) {
-      setError("El instructor ya tiene una clase en este turno.");
+    // Validar datos
+    if (
+      !className ||
+      !selectedTurn ||
+      !date ||
+      !capacity ||
+      !activity ||
+      !level
+    ) {
+      setError("Todos los campos son obligatorios.");
       return;
     }
 
-    if (studentConflict) {
-      setError("Un alumno ya está inscrito en otra clase en este turno.");
+    if (isNaN(capacity) || capacity <= 0) {
+      setError("El número de cupos debe ser un número positivo.");
       return;
     }
 
     onSubmit({
       className,
-      instructor: selectedInstructor,
       turn: selectedTurn,
-      students: selectedStudents,
+      date,
+      capacity: parseInt(capacity),
+      isGroupClass,
+      activity,
+      level,
     });
 
+    // Limpiar formulario
     setClassName("");
     setSelectedInstructor("");
     setSelectedTurn("");
-    setSelectedStudents([]);
+    setDate("");
+    setCapacity("");
+    setIsGroupClass(false);
+    setActivity("");
+    setLevel("");
     setError("");
   };
 
@@ -92,19 +106,59 @@ const ClassForm = ({ instructors, students, onSubmit }) => {
         </select>
       </div>
       <div>
-        <label>Alumnos:</label>
+        <label>Fecha:</label>
+        <input
+          type="date"
+          value={date}
+          onChange={(e) => setDate(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>Cupos:</label>
+        <input
+          type="number"
+          value={capacity}
+          onChange={(e) => setCapacity(e.target.value)}
+          required
+        />
+      </div>
+      <div>
+        <label>
+          <input
+            type="checkbox"
+            checked={isGroupClass}
+            onChange={(e) => setIsGroupClass(e.target.checked)}
+          />
+          Clase Grupal
+        </label>
+      </div>
+      <div>
+        <label>Actividad:</label>
         <select
-          multiple
-          value={selectedStudents}
-          onChange={(e) =>
-            setSelectedStudents(
-              Array.from(e.target.selectedOptions, (option) => option.value)
-            )
-          }
+          value={activity}
+          onChange={(e) => setActivity(e.target.value)}
+          required
         >
-          {students.map((student) => (
-            <option key={student.name} value={student.name}>
-              {student.name}
+          <option value="">Seleccione una actividad</option>
+          {activities.map((act) => (
+            <option key={act} value={act}>
+              {act}
+            </option>
+          ))}
+        </select>
+      </div>
+      <div>
+        <label>Nivel:</label>
+        <select
+          value={level}
+          onChange={(e) => setLevel(e.target.value)}
+          required
+        >
+          <option value="">Seleccione un nivel</option>
+          {levels.map((lvl) => (
+            <option key={lvl} value={lvl}>
+              {lvl}
             </option>
           ))}
         </select>
