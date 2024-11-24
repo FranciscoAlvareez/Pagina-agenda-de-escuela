@@ -47,11 +47,22 @@ const AdminPage = () => {
     }
   };
 
+  const fetchClasses = async () => {
+    try {
+      const response = await fetch("http://localhost:5000/clase");
+      const data = await response.json();
+      setClasses(data); // Guardar las clases en el estado
+    } catch (error) {
+      console.error("Error al obtener las clases:", error);
+    }
+  };
+
   // Cargar datos al montar el componente
   useEffect(() => {
     fetchInstructors();
     fetchTurns();
     fetchActivities();
+    fetchClasses(); // Cargar las clases al inicio
   }, []);
 
   // Manejar la creación de clases y envío al backend
@@ -100,8 +111,8 @@ const AdminPage = () => {
         setSuccess(result.message);
         setError("");
 
-        // Actualizar lista local de clases
-        setClasses((prevClasses) => [...prevClasses, newClass]);
+        // Volver a cargar las clases después de agregar
+        fetchClasses();
 
         // Limpiar campos
         setSelectedInstructor("");
@@ -232,30 +243,34 @@ const AdminPage = () => {
           </tr>
         </thead>
         <tbody>
-          {classes.map((classItem, index) => (
-            <tr key={index}>
-              <td>
-                {
-                  instructors.find((i) => i.ci === classItem.instructor_id)
-                    ?.nombre
-                }{" "}
-                {
-                  instructors.find((i) => i.ci === classItem.instructor_id)
-                    ?.apellido
-                }
-              </td>
-              <td>{turns.find((t) => t.id === classItem.turno_id)?.turno}</td>
-              <td>
-                {
-                  activities.find((a) => a.id === classItem.actividad_id)
-                    ?.descripcion
-                }
-              </td>
-              <td>{classItem.fecha}</td>
-              <td>{classItem.cupos}</td>
-              <td>{classItem.es_grupal ? "Grupal" : "Individual"}</td>
-            </tr>
-          ))}
+          {classes.map((classItem, index) => {
+            const instructor = instructors.find(
+              (i) => i.ci === classItem.ci_instructor
+            );
+            const turn = turns.find((t) => t.id === classItem.id_turno);
+            const activity = activities.find(
+              (a) => a.id === classItem.id_actividad
+            );
+
+            return (
+              <tr key={index}>
+                <td>
+                  {instructor
+                    ? `${instructor.nombre} ${instructor.apellido}`
+                    : "N/A"}
+                </td>
+                <td>
+                  {turn
+                    ? `${turn.turno} (${turn.hora_inicio} - ${turn.hora_fin})`
+                    : "N/A"}
+                </td>
+                <td>{activity ? activity.descripcion : "N/A"}</td>
+                <td>{classItem.fecha_clase}</td>
+                <td>{classItem.cupos}</td>
+                <td>{classItem.grupal ? "Grupal" : "Individual"}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
