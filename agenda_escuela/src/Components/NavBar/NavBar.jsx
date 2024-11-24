@@ -1,4 +1,3 @@
-// NavBar.js
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import "./NavBar.css";
@@ -8,6 +7,12 @@ const NavBar = () => {
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
+  };
+  const handleLogout = () => {
+    // Limpiar el localStorage
+    localStorage.removeItem("user");
+    localStorage.removeItem("rol");
+    alert("Has cerrado sesión");
   };
 
   return (
@@ -20,14 +25,15 @@ const NavBar = () => {
           <Link to="/home">Home</Link>
         </li>
         <li>
-          <Link to="/AboutUs">Acerca de nosotros</Link>{" "}
+          <Link to="/AboutUs">Acerca de nosotros</Link>
         </li>
-
         <li>
           <Link to="/inscripciones">Inscripciones</Link>
         </li>
         <li>
-          <Link to="/logout">Log Out</Link>
+          <Link to="/login" onClick={handleLogout}>
+            Log Out
+          </Link>
         </li>
       </ul>
       <button className="navBar-toggle" onClick={toggleMenu}>
