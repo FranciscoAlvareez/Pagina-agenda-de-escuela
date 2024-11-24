@@ -349,7 +349,47 @@ def inscribir_alumno():
     except mysql.connector.Error as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/agregar_clase', methods=['POST'])
+def agregar_clase():
+    try:
+        data = request.json
 
+        # Extraer datos del cuerpo de la solicitud
+        ci_instructor = data.get('instructor_id')
+        id_turno = data.get('turno_id')
+        id_actividad = data.get('actividad_id')
+        fecha_clase = data.get('fecha')
+        cupos = data.get('cupos')
+        grupal = data.get('es_grupal')
+        print("ID equipamiento recibido:", ci_instructor)  # Debug
+
+        # Validar que todos los campos estén presentes
+        if not (ci_instructor and id_actividad and id_turno and fecha_clase and cupos):
+            return jsonify({"error": "Todos los campos son obligatorios"}), 400
+
+        # Conexión a la base de datos
+        conexion = mysql.connector.connect(**db_config)
+        cursor = conexion.cursor()
+
+        # Insertar la clase en la base de datos
+        query = """
+            INSERT INTO clase (ci_instructor, id_actividad, id_turno, fecha_clase, cupos, grupal)
+            VALUES (%s, %s, %s, %s, %s, %s)
+        """
+        cursor.execute(query, (ci_instructor,id_actividad, id_turno,  fecha_clase, cupos, grupal))
+        conexion.commit()
+
+        # Cerrar la conexión
+        cursor.close()
+        conexion.close()
+
+        return jsonify({"message": "Clase agregada exitosamente"}), 201
+
+    except mysql.connector.Error as e:
+        return jsonify({"error": str(e)}), 500
+
+    except Exception as e:
+        return jsonify({"error": "Ocurrió un error inesperado: " + str(e)}), 500
 
 
 
