@@ -4,9 +4,10 @@ import Forms from "./Components/Forms/index.jsx";
 import React from "react";
 import Home from "./Views/Home";
 import NavBar from "./Components/NavBar/NavBar.jsx";
-import AboutUs from "./Views/AboutUs.jsx"; 
+import AboutUs from "./Views/AboutUs.jsx";
 import Inscripciones from "./Views/Inscripciones.jsx";
 import { useLocation } from "react-router-dom";
+import AdminPage from "./Views/AdmingPage.jsx";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ const AppRoutes = () => {
         <Route path="/register" element={<Forms title={"Register"} />} />
         <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/inscripciones" element={<Inscripciones />} />
+        <Route path="/admin" element={<AdminPage />} />
       </Routes>
     </div>
   );

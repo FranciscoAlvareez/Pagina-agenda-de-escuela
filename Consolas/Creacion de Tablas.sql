@@ -2,13 +2,13 @@ CREATE DATABASE Obligatorio;
 USE Obligatorio;
 -- Tabla niveles
 CREATE TABLE niveles (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     descripcion VARCHAR(50) NOT NULL
 );
 
 -- Tabla actividades
 CREATE TABLE actividades (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     descripcion VARCHAR(255),
     costo DOUBLE NOT NULL,
     edad_minima INT,
@@ -38,7 +38,7 @@ CREATE TABLE instructores (
 
 -- Tabla turnos
 CREATE TABLE turnos (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     hora_inicio TIME NOT NULL,
     hora_fin TIME NOT NULL,
     turno VARCHAR(45) NOT NULL
@@ -48,11 +48,11 @@ CREATE TABLE turnos (
 
 -- Tabla clase
 CREATE TABLE clase (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     ci_instructor INT NOT NULL,
     id_actividad INT NOT NULL,
     id_turno INT NOT NULL,
-    dictada BOOLEAN NOT NULL ,
+    dictada BOOLEAN ,
     cupos INT NOT NULL,
     grupal BOOLEAN NOT NULL,
     fecha_clase DATE NOT NULL,
@@ -71,7 +71,7 @@ ADD UNIQUE KEY unico_clase (id_turno, fecha_clase);
 
 -- Tabla equipamiento
 CREATE TABLE equipamiento (
-    id INT PRIMARY KEY,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     id_actividad INT NOT NULL ,
     descripcion VARCHAR(255),
     costo DOUBLE NOT NULL,
@@ -121,7 +121,7 @@ CREATE TABLE asistencia (
 
 -- Tabla alquiler_equipamiento (registro de alquileres)
 CREATE TABLE alquiler_equipamiento (
-  id INT PRIMARY KEY,
+  id INT AUTO_INCREMENT PRIMARY KEY,
   id_clase INT NOT NULL,
   ci_alumno INT NOT NULL,
   id_equipamiento INT NOT NULL,
@@ -131,3 +131,4 @@ CREATE TABLE alquiler_equipamiento (
   FOREIGN KEY (ci_alumno) REFERENCES alumnos(ci),
   FOREIGN KEY (id_equipamiento) REFERENCES equipamiento(id)
 );
+

@@ -31,6 +31,9 @@ const NavBar = () => {
           <Link to="/inscripciones">Inscripciones</Link>
         </li>
         <li>
+          <Link to="/admin">Administración</Link>
+        </li>
+        <li>
           <Link to="/login" onClick={handleLogout}>
             Log Out
           </Link>
