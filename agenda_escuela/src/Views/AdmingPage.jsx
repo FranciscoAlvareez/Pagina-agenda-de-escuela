@@ -57,6 +57,32 @@ const AdminPage = () => {
     }
   };
 
+  // Eliminar una clase
+  const deleteClass = async (id) => {
+    try {
+      const response = await fetch(`http://localhost:5000/clase/${id}`, {
+        method: "DELETE",
+      });
+
+      if (response.ok) {
+        setSuccess("Clase eliminada exitosamente.");
+        setError("");
+        // Actualizar lista local de clases después de eliminar
+        setClasses((prevClasses) =>
+          prevClasses.filter((classItem) => classItem.id !== id)
+        );
+      } else {
+        const errorResult = await response.json();
+        setError(errorResult.error || "Error al eliminar la clase.");
+        setSuccess("");
+      }
+    } catch (error) {
+      setError("Error al conectar con el servidor.");
+      setSuccess("");
+      console.error("Error al eliminar la clase:", error);
+    }
+  };
+
   // Cargar datos al montar el componente
   useEffect(() => {
     fetchInstructors();
@@ -240,6 +266,7 @@ const AdminPage = () => {
             <th>Fecha</th>
             <th>Cupos</th>
             <th>Tipo</th>
+            <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
@@ -268,6 +295,14 @@ const AdminPage = () => {
                 <td>{classItem.fecha_clase}</td>
                 <td>{classItem.cupos}</td>
                 <td>{classItem.grupal ? "Grupal" : "Individual"}</td>
+                <td>
+                  <button
+                    onClick={() => deleteClass(classItem.id)}
+                    style={{ color: "red", cursor: "pointer" }}
+                  >
+                    Eliminar
+                  </button>
+                </td>
               </tr>
             );
           })}

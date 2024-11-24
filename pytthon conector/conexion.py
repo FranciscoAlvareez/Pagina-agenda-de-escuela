@@ -294,53 +294,56 @@ def login_user():
 @app.route('/inscribir', methods=['POST'])
 def inscribir_alumno():
     try:
+        # Obtener los datos enviados desde el frontend
         data = request.json
         id_clase = data.get('id_clase')
         ci_alumno = data.get('ci_alumno')
         id_turno = data.get('id_turno')
         fecha_clase = data.get('fecha_clase')
-        es_grupal = data.get('es_grupal')
-        id_equipamiento = data.get('id_equipamiento')  # Equipamiento obligatorio
-        es_alquiler = data.get('es_alquiler', 0)
+        id_equipamiento = data.get('id_equipamiento')
+        es_alquiler = data.get('es_alquiler', 0)  # Valor por defecto: 0
 
-        print("ID equipamiento recibido:", id_equipamiento)  # Debug
-        if not id_equipamiento:
-            return jsonify({"error": "El equipamiento es obligatorio"}), 400
 
         # Conexión a la base de datos
         conexion = mysql.connector.connect(**db_config)
-        cursor = conexion.cursor(dictionary=True)
+        cursor = conexion.cursor(dictionary=True)  # Asegúrate de crear el cursor
 
-        # Verificar si el equipamiento existe
-        query_equipamiento = "SELECT * FROM equipamiento WHERE id = %s"
-        cursor.execute(query_equipamiento, (id_equipamiento,))
-        equipamiento = cursor.fetchone()
-
-        if not equipamiento:
-            return jsonify({"error": "El equipamiento seleccionado no existe"}), 404
-
-        # Verificar cupos en la clase seleccionada
+        # Verificar que la clase existe
         query_clase = "SELECT * FROM clase WHERE id = %s AND id_turno = %s AND fecha_clase = %s"
         cursor.execute(query_clase, (id_clase, id_turno, fecha_clase))
         clase = cursor.fetchone()
+
         if not clase:
             return jsonify({"error": "La clase seleccionada no existe"}), 404
 
-        if clase["cupos"] <= 0:
+        # Verificar que hay cupos disponibles
+        if clase['cupos'] <= 0:
             return jsonify({"error": "No hay cupos disponibles en la clase"}), 400
 
-        # Insertar al alumno en la tabla alumno_clase
+        # Verificar equipamiento (si es obligatorio)
+        if id_equipamiento:
+            query_equipamiento = "SELECT * FROM equipamiento WHERE id = %s"
+            cursor.execute(query_equipamiento, (id_equipamiento,))
+            equipamiento = cursor.fetchone()
+
+            if not equipamiento:
+                return jsonify({"error": "El equipamiento seleccionado no existe"}), 404
+
+        # Insertar en alumno_clase
         query_insert = """
             INSERT INTO alumno_clase (id_clase, ci_alumno, id_equipamiento, es_alquiler, id_turno, fecha_clase)
             VALUES (%s, %s, %s, %s, %s, %s)
         """
-        cursor.execute(query_insert, (id_clase, ci_alumno, id_equipamiento, id_turno, fecha_clase))
+        cursor.execute(query_insert, (id_clase, ci_alumno, id_equipamiento, es_alquiler, id_turno, fecha_clase))
 
-        # Reducir el cupo de la clase
+        # Reducir cupos en la clase
         query_update_cupos = "UPDATE clase SET cupos = cupos - 1 WHERE id = %s"
         cursor.execute(query_update_cupos, (id_clase,))
 
+        # Confirmar cambios en la base de datos
         conexion.commit()
+
+        # Cerrar conexión y cursor
         cursor.close()
         conexion.close()
 
@@ -348,7 +351,10 @@ def inscribir_alumno():
 
     except mysql.connector.Error as e:
         return jsonify({"error": str(e)}), 500
-
+    except Exception as e:
+        print("Error en el backend:", str(e))
+        return jsonify({"error": str(e)}), 500
+    
 @app.route('/agregar_clase', methods=['POST'])
 def agregar_clase():
     try:
