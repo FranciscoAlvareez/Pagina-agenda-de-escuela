@@ -1,0 +1,184 @@
+/* General */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f8f9fa;
+  color: #343a40;
+}
+
+/* Contenedor principal */
+.admin-container {
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Títulos */
+h1,
+h2 {
+  text-align: center;
+  color: #007bff;
+  margin-bottom: 20px;
+}
+
+/* Formulario */
+form {
+  margin: 0 auto;
+  max-width: 600px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+form h2 {
+  margin-top: 0;
+  color: #007bff;
+}
+
+form div {
+  margin-bottom: 15px;
+}
+
+form label {
+  display: block;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+form input,
+form select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+form button {
+  width: 100%;
+  background: #007bff;
+  color: #ffffff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+form button:hover {
+  background: #0056b3;
+}
+
+/* Tabla */
+table {
+  width: 100%;
+  margin-top: 30px;
+  border-collapse: collapse;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+table th,
+table td {
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #dee2e6;
+}
+
+table th {
+  background: #007bff;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+table tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+table tr:hover {
+  background: #e9ecef;
+}
+
+/* Mensajes de error */
+form p {
+  color: red;
+  font-weight: bold;
+  text-align: center;
+}
+
+/* Indicadores de carga */
+select option[value=""] {
+  font-style: italic;
+  color: #6c757d;
+}
+
+/* Responsividad */
+@media (max-width: 768px) {
+  .admin-container {
+    padding: 10px;
+  }
+
+  form {
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  form div {
+    margin-bottom: 10px;
+  }
+
+  form button {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  table th,
+  table td {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  table {
+    font-size: 12px;
+    box-shadow: none;
+  }
+}
+
+@media (max-width: 480px) {
+  table,
+  table thead,
+  table tbody,
+  table th,
+  table td,
+  table tr {
+    display: block;
+  }
+
+  table th {
+    display: none;
+  }
+
+  table td {
+    position: relative;
+    padding-left: 50%;
+    text-align: right;
+    border: none;
+    border-bottom: 1px solid #dee2e6;
+  }
+
+  table td:before {
+    position: absolute;
+    left: 10px;
+    content: attr(data-label);
+    text-align: left;
+    font-weight: bold;
+    color: #343a40;
+  }
+}

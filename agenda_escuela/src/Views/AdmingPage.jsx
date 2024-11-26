@@ -16,6 +16,25 @@ const AdminPage = () => {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Verificar el rol del usuario desde el token
+  const verifyUserRole = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("No estás autenticado.");
+      return;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1])); // Decodificar payload del token
+      setIsAdmin(payload.rol === "admin");
+    } catch (e) {
+      console.error("Error al verificar el token:", e);
+      setError("Token inválido.");
+    }
+  };
+
   // Funciones para obtener datos del backend
   const fetchInstructors = async () => {
     try {
@@ -84,6 +103,7 @@ const AdminPage = () => {
 
   // Cargar datos al montar el componente
   useEffect(() => {
+    verifyUserRole();
     fetchInstructors();
     fetchTurns();
     fetchActivities();
@@ -93,6 +113,11 @@ const AdminPage = () => {
   // Manejar la creación de clases y envío al backend
   const handleAddClass = async (e) => {
     e.preventDefault();
+
+    if (!isAdmin) {
+      setError("No tienes permisos para agregar clases.");
+      return;
+    }
 
     // Validaciones
     if (
@@ -123,10 +148,13 @@ const AdminPage = () => {
     };
 
     try {
+      const token = localStorage.getItem("token"); // Obtener el token
+
       const response = await fetch("http://localhost:5000/agregar_clase", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Incluir el token en los encabezados
         },
         body: JSON.stringify(newClass),
       });
@@ -161,99 +189,106 @@ const AdminPage = () => {
   return (
     <div className="admin-container">
       <h1>Administración</h1>
-      <form onSubmit={handleAddClass}>
-        <h2>Agregar Clase</h2>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        {success && <p style={{ color: "green" }}>{success}</p>}
+      {!isAdmin && (
+        <p style={{ color: "red" }}>
+          No tienes permisos para administrar clases.
+        </p>
+      )}
+      {isAdmin && (
+        <form onSubmit={handleAddClass}>
+          <h2>Agregar Clase</h2>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {success && <p style={{ color: "green" }}>{success}</p>}
 
-        {/* Instructores */}
-        <div>
-          <label>Instructor:</label>
-          <select
-            value={selectedInstructor}
-            onChange={(e) => setSelectedInstructor(e.target.value)}
-            required
-          >
-            <option value="">Seleccione un instructor</option>
-            {instructors.map((instructor) => (
-              <option key={instructor.ci} value={instructor.ci}>
-                {instructor.nombre} {instructor.apellido}
-              </option>
-            ))}
-          </select>
-        </div>
+          {/* Instructores */}
+          <div>
+            <label>Instructor:</label>
+            <select
+              value={selectedInstructor}
+              onChange={(e) => setSelectedInstructor(e.target.value)}
+              required
+            >
+              <option value="">Seleccione un instructor</option>
+              {instructors.map((instructor) => (
+                <option key={instructor.ci} value={instructor.ci}>
+                  {instructor.nombre} {instructor.apellido}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* Turnos */}
-        <div>
-          <label>Turno:</label>
-          <select
-            value={selectedTurn}
-            onChange={(e) => setSelectedTurn(e.target.value)}
-            required
-          >
-            <option value="">Seleccione un turno</option>
-            {turns.map((turn) => (
-              <option key={turn.id} value={turn.id}>
-                {turn.turno} - {turn.hora_inicio} a {turn.hora_fin}
-              </option>
-            ))}
-          </select>
-        </div>
+          {/* Turnos */}
+          <div>
+            <label>Turno:</label>
+            <select
+              value={selectedTurn}
+              onChange={(e) => setSelectedTurn(e.target.value)}
+              required
+            >
+              <option value="">Seleccione un turno</option>
+              {turns.map((turn) => (
+                <option key={turn.id} value={turn.id}>
+                  {turn.turno} - {turn.hora_inicio} a {turn.hora_fin}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* Actividades */}
-        <div>
-          <label>Actividad:</label>
-          <select
-            value={selectedActivity}
-            onChange={(e) => setSelectedActivity(e.target.value)}
-            required
-          >
-            <option value="">Seleccione una actividad</option>
-            {activities.map((activity) => (
-              <option key={activity.id} value={activity.id}>
-                {activity.descripcion} - ${activity.costo} - Edad mínima:{" "}
-                {activity.edad_minima}
-              </option>
-            ))}
-          </select>
-        </div>
+          {/* Actividades */}
+          <div>
+            <label>Actividad:</label>
+            <select
+              value={selectedActivity}
+              onChange={(e) => setSelectedActivity(e.target.value)}
+              required
+            >
+              <option value="">Seleccione una actividad</option>
+              {activities.map((activity) => (
+                <option key={activity.id} value={activity.id}>
+                  {activity.descripcion} - ${activity.costo} - Edad mínima:{" "}
+                  {activity.edad_minima}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* Fecha */}
-        <div>
-          <label>Fecha:</label>
-          <input
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
-        </div>
-
-        {/* Capacidad */}
-        <div>
-          <label>Cupos:</label>
-          <input
-            type="number"
-            value={capacity}
-            onChange={(e) => setCapacity(e.target.value)}
-            required
-          />
-        </div>
-
-        {/* Clase grupal */}
-        <div>
-          <label>
+          {/* Fecha */}
+          <div>
+            <label>Fecha:</label>
             <input
-              type="checkbox"
-              checked={isGroupClass}
-              onChange={(e) => setIsGroupClass(e.target.checked)}
+              type="date"
+              value={date}
+              onChange={(e) => setDate(e.target.value)}
+              required
             />
-            Clase Grupal
-          </label>
-        </div>
+          </div>
 
-        <button type="submit">Guardar Clase</button>
-      </form>
+          {/* Capacidad */}
+          <div>
+            <label>Cupos:</label>
+            <input
+              type="number"
+              value={capacity}
+              onChange={(e) => setCapacity(e.target.value)}
+              required
+            />
+          </div>
+
+          {/* Clase grupal */}
+          <div>
+            <label>
+              <input
+                type="checkbox"
+                checked={isGroupClass}
+                onChange={(e) => setIsGroupClass(e.target.checked)}
+              />
+              Clase Grupal
+            </label>
+          </div>
+
+          <button type="submit">Guardar Clase</button>
+        </form>
+      )}
 
       <h2>Clases Existentes</h2>
       <table>

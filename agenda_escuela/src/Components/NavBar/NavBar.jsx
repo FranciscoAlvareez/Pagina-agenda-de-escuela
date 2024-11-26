@@ -31,7 +31,10 @@ const NavBar = () => {
           <Link to="/inscripciones">Inscripciones</Link>
         </li>
         <li>
-          <Link to="/admin">Administración</Link>
+          <Link to="/admin">Administración clase</Link>
+        </li>
+        <li>
+          <Link to="/adminEq">Administración equipamiento</Link>
         </li>
         <li>
           <Link to="/login" onClick={handleLogout}>

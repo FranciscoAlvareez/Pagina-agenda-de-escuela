@@ -8,6 +8,7 @@ import AboutUs from "./Views/AboutUs.jsx";
 import Inscripciones from "./Views/Inscripciones.jsx";
 import { useLocation } from "react-router-dom";
 import AdminPage from "./Views/AdmingPage.jsx";
+import AdminPageEq from "./Views/AdminPageEq.jsx";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ const AppRoutes = () => {
         <Route path="/AboutUs" element={<AboutUs />} />
         <Route path="/inscripciones" element={<Inscripciones />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/adminEq" element={<AdminPageEq />} />
       </Routes>
     </div>
   );
