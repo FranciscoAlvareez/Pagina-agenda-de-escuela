@@ -312,34 +312,47 @@ def login_user():
         conexion = mysql.connector.connect(**db_config)
         cursor = conexion.cursor(dictionary=True)
 
-        # Consultar si existe el usuario y su rol
-        query = """
-            SELECT alumnos.ci, alumnos.nombre, login.rol 
-            FROM login 
-            INNER JOIN alumnos ON login.correo = alumnos.email 
-            WHERE correo = %s AND contrasena = %s
-        """
-        cursor.execute(query, (correo, contrasena))
+        # Consultar si el usuario existe en la tabla login
+        query_login = "SELECT correo, rol FROM login WHERE correo = %s AND contrasena = %s"
+        cursor.execute(query_login, (correo, contrasena))
         usuario = cursor.fetchone()
 
+        if not usuario:
+            return jsonify({"error": "Correo o contraseña incorrectos"}), 401
+
+        # Inicializar el payload con la información básica del usuario
+        payload = {
+            "correo": usuario["correo"],
+            "rol": usuario["rol"],
+            "exp": datetime.utcnow() + timedelta(hours=1)  # Expira en 1 hora
+        }
+
+        # Si el rol es "alumno", buscar el ci en la tabla alumnos
+        if usuario["rol"] == "alumno":
+            query_alumno = "SELECT ci, nombre FROM alumnos WHERE email = %s"
+            cursor.execute(query_alumno, (correo,))
+            alumno = cursor.fetchone()
+
+            if alumno:
+                payload["ci"] = alumno["ci"]
+                payload["nombre"] = alumno["nombre"]
+
+        # Generar el token
+        token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
+
+        # Cerrar conexión
         cursor.close()
         conexion.close()
 
-        if usuario:
-            # Generar un token con los datos del usuario
-            payload = {
-                "ci": usuario["ci"],
-                "rol": usuario["rol"],
-                "nombre": usuario["nombre"],
-                "exp": datetime.utcnow() + timedelta(hours=1)  # Expira en 1 hora
-            }
-            token = jwt.encode(payload, SECRET_KEY, algorithm="HS256")
-            return jsonify({"message": "Inicio de sesión exitoso", "token": token}), 200
-        else:
-            return jsonify({"error": "Correo o contraseña incorrectos"}), 401
+        return jsonify({"message": "Inicio de sesión exitoso", "token": token}), 200
 
     except mysql.connector.Error as e:
+        return jsonify({"error": f"Error en la base de datos: {e}"}), 500
+    except Exception as e:
+        print(f"Error en el backend: {e}")
         return jsonify({"error": str(e)}), 500
+
+    
 
 @app.route('/inscribir', methods=['POST'])
 def inscribir_alumno():

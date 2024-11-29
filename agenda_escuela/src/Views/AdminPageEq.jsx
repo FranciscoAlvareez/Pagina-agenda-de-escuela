@@ -4,13 +4,30 @@ import "./AdminPageEq.css";
 const AdminPageEq = () => {
   const [equipments, setEquipments] = useState([]);
   const [activities, setActivities] = useState([]);
-
   const [description, setDescription] = useState("");
   const [cost, setCost] = useState("");
   const [stock, setStock] = useState("");
   const [activityId, setActivityId] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  // Verificar el rol del usuario desde el token
+  const verifyUserRole = () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("No estás autenticado.");
+      return;
+    }
+
+    try {
+      const payload = JSON.parse(atob(token.split(".")[1])); // Decodificar payload del token
+      setIsAdmin(payload.rol === "admin");
+    } catch (e) {
+      console.error("Error al verificar el token:", e);
+      setError("Token inválido.");
+    }
+  };
 
   // Función para obtener actividades
   const fetchActivities = async () => {
@@ -37,6 +54,11 @@ const AdminPageEq = () => {
   // Función para agregar un nuevo equipamiento
   const handleAddEquipment = async (e) => {
     e.preventDefault();
+
+    if (!isAdmin) {
+      setError("No tienes permisos para agregar equipamientos.");
+      return;
+    }
 
     // Validaciones
     if (!description || !cost || !stock || !activityId) {
@@ -65,12 +87,15 @@ const AdminPageEq = () => {
     };
 
     try {
+      const token = localStorage.getItem("token"); // Obtener el token
+
       const response = await fetch(
         "http://localhost:5000/agregar_equipamiento",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`, // Incluir el token en los encabezados
           },
           body: JSON.stringify(newEquipment),
         }
@@ -103,6 +128,11 @@ const AdminPageEq = () => {
 
   // Función para eliminar un equipamiento
   const deleteEquipment = async (id) => {
+    if (!isAdmin) {
+      setError("No tienes permisos para eliminar equipamientos.");
+      return;
+    }
+
     try {
       const response = await fetch(
         `http://localhost:5000/equipamientos/${id}`,
@@ -131,6 +161,7 @@ const AdminPageEq = () => {
 
   // Cargar actividades y equipamientos al montar el componente
   useEffect(() => {
+    verifyUserRole();
     fetchActivities();
     fetchEquipments();
   }, []);
@@ -138,63 +169,70 @@ const AdminPageEq = () => {
   return (
     <div className="admin-container">
       <h1>Administración de Equipamientos</h1>
-      <form onSubmit={handleAddEquipment}>
-        <h2>Agregar Equipamiento</h2>
-        {error && <p style={{ color: "red" }}>{error}</p>}
-        {success && <p style={{ color: "green" }}>{success}</p>}
+      {!isAdmin && (
+        <p style={{ color: "red" }}>
+          No tienes permisos para administrar equipamientos.
+        </p>
+      )}
+      {isAdmin && (
+        <form onSubmit={handleAddEquipment}>
+          <h2>Agregar Equipamiento</h2>
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {success && <p style={{ color: "green" }}>{success}</p>}
 
-        {/* Descripción */}
-        <div>
-          <label>Descripción:</label>
-          <input
-            type="text"
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            required
-          />
-        </div>
+          {/* Descripción */}
+          <div>
+            <label>Descripción:</label>
+            <input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              required
+            />
+          </div>
 
-        {/* Costo */}
-        <div>
-          <label>Costo:</label>
-          <input
-            type="number"
-            value={cost}
-            onChange={(e) => setCost(e.target.value)}
-            required
-          />
-        </div>
+          {/* Costo */}
+          <div>
+            <label>Costo:</label>
+            <input
+              type="number"
+              value={cost}
+              onChange={(e) => setCost(e.target.value)}
+              required
+            />
+          </div>
 
-        {/* Stock */}
-        <div>
-          <label>Stock:</label>
-          <input
-            type="number"
-            value={stock}
-            onChange={(e) => setStock(e.target.value)}
-            required
-          />
-        </div>
+          {/* Stock */}
+          <div>
+            <label>Stock:</label>
+            <input
+              type="number"
+              value={stock}
+              onChange={(e) => setStock(e.target.value)}
+              required
+            />
+          </div>
 
-        {/* Actividad */}
-        <div>
-          <label>Actividad:</label>
-          <select
-            value={activityId}
-            onChange={(e) => setActivityId(e.target.value)}
-            required
-          >
-            <option value="">Seleccione una actividad</option>
-            {activities.map((activity) => (
-              <option key={activity.id} value={activity.id}>
-                {activity.descripcion}
-              </option>
-            ))}
-          </select>
-        </div>
+          {/* Actividad */}
+          <div>
+            <label>Actividad:</label>
+            <select
+              value={activityId}
+              onChange={(e) => setActivityId(e.target.value)}
+              required
+            >
+              <option value="">Seleccione una actividad</option>
+              {activities.map((activity) => (
+                <option key={activity.id} value={activity.id}>
+                  {activity.descripcion}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        <button type="submit">Guardar Equipamiento</button>
-      </form>
+          <button type="submit">Guardar Equipamiento</button>
+        </form>
+      )}
 
       <h2>Equipamientos Existentes</h2>
       <table>
